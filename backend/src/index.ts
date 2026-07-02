@@ -18,15 +18,6 @@ app.get('/health', (req, res) => {
   res.json({ status: "Server is running"})
 })
 
-app.get('/redis-test', async (req, res) => {
-  try{
-    await redis.set('test-key', 'test-value');
-    const value = await redis.get('test-key');
-    res.json({ success: true, value });
-  } catch(err){
-    res.json({ success: false })
-  }
-})
 
 app.listen(PORT, async () => {
   await startHealthCheckSchedule();

@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { redis } from './utils/redis';
 import urlRouter from './routes/urls'
 import { startHealthCheckSchedule } from './queue/healthCheck';
 

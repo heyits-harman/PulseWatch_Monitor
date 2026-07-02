@@ -1,0 +1,6 @@
+node_Modules/
+dist/
+src/routes/status.ts
+types/
+package-lock.json
+.env

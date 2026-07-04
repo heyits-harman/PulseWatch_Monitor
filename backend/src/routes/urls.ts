@@ -1,5 +1,6 @@
 import express from 'express';
-import { redis } from '../utils/redis'
+import { redis } from '../utils/redis';
+import { checkUrl } from '../utils/healthCheck'
 
 const router = express.Router();
 
@@ -12,8 +13,7 @@ router.post('/urls', async (req, res) => {
     }
     await redis.sadd('monitored-urls', url);
 
-    await redis.set(`url:${url}:status`, 'PENDING');
-    await redis.set(`url:${url}:time`, '0');
+    await checkUrl(url);
 
     res.json({ success: true, message: `Added ${url}` });
 

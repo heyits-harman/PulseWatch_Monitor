@@ -2,43 +2,55 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const AddURLForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
-
   const [url, setUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.SubmitEvent): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    setError('');
+    setSuccess('');
+    setLoading(true);
 
-    try{
-      const response = await axios.post('http://localhost:5000/api/urls', {url} );
-
-      setUrl("");
-
-      setSuccess("URL added successfully!")
-
+    try {
+      await axios.post('http://localhost:5000/api/urls', { url });
+      setUrl('');
+      setSuccess('Endpoint added — health checks will begin shortly.');
       if (onSuccess) onSuccess();
-
-    } catch(err: any){
-      setError(err.response?.data?.message || "Failed to add URL");
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to add URL');
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  return(
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={url}
-        onChange={ (e) => setUrl(e.target.value) }
-        placeholder="Enter URL"
-        required
-      />
-      <button type="submit">Add URL</button>
+  return (
+    <>
+      <form className="add-form" onSubmit={handleSubmit}>
+        <div className="input-wrapper">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://example.com"
+            required
+            disabled={loading}
+          />
+        </div>
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? 'Adding…' : '+ Add Monitor'}
+        </button>
+      </form>
 
-      {success && <p style={ {color: "green"} }>{success}</p>}
-    </form>
+      {success && <p className="form-message success">{success}</p>}
+      {error && <p className="form-message error">{error}</p>}
+    </>
   );
-}
+};
+
 export default AddURLForm;

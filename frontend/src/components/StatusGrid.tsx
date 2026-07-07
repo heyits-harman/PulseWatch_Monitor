@@ -37,8 +37,22 @@ const StatusGrid: React.FC = () => {
 
   useEffect(() => {
     fetchStatus();
-    const interval = setInterval(fetchStatus, 10000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(fetchStatus, 10000);
+    // return () => clearInterval(interval);
+
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onmessage = (event: MessageEvent<string>) => {
+      const update = JSON.parse(event.data as string);
+      setUrls(prev => prev.map(u => u.url === update.url ? { ...u, status: update.status, time: update.time } : u))
+    }
+
+    ws.onclose = () => {
+      console.log("Disconnected from real-time updates")
+    }
+
+    return () => ws.close();
+
   }, []);
 
   const handleDelete = async (url: string) => {

@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import urlRouter from './routes/urls'
 import { startHealthCheckSchedule } from './queue/urlQueue';
+import { startWebSocketServer } from './websocket/server';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get('/health', (req, res) => {
 
 
 app.listen(PORT, async () => {
+  startWebSocketServer();
   await startHealthCheckSchedule();
   console.log(`Server is running on ${PORT}`)
 })

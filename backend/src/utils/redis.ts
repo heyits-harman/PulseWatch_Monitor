@@ -3,11 +3,12 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST,
-  port: parseInt(process.env.REDIS_PORT!, 10),
-  maxRetriesPerRequest: null,
-})
+const redis = new Redis(
+  process.env.REDIS_URL || 'redis://localhost:6379',
+  {
+    maxRetriesPerRequest: null,
+  }
+);
 
 redis.on('error', (err) => {
   console.log("Redis not Connected: ", err.message);

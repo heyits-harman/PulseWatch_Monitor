@@ -1,14 +1,11 @@
-import { Queue, Worker, Job } from 'bullmq';
+import { Queue, Worker, Job, ConnectionOptions } from 'bullmq';
 import { checkUrl } from '../utils/healthCheck'
 import { redis } from '../utils/redis'
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const connection = {
-  host: process.env.REDIS_HOST,
-  port: parseInt(process.env.REDIS_PORT!, 10)
-}
+const connection: ConnectionOptions = { url: process.env.REDIS_URL || 'redis://localhost:6379' };
 
 export const healthCheckQueue = new Queue("health-checks", { connection })
 

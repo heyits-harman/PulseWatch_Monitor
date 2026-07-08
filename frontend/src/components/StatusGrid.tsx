@@ -26,7 +26,7 @@ const StatusGrid: React.FC = () => {
 
   const fetchStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/urls');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/urls`);
       setUrls(response.data.urls);
     } catch (err: any) {
       console.error('Failed to fetch URLs', err);
@@ -37,10 +37,8 @@ const StatusGrid: React.FC = () => {
 
   useEffect(() => {
     fetchStatus();
-    // const interval = setInterval(fetchStatus, 10000);
-    // return () => clearInterval(interval);
 
-    const ws = new WebSocket('ws://localhost:8080');
+    const ws = new WebSocket(process.env.REACT_APP_WS_URL || 'ws://localhost:5000/ws');
 
     ws.onmessage = (event: MessageEvent<string>) => {
       const update = JSON.parse(event.data as string);
@@ -58,8 +56,8 @@ const StatusGrid: React.FC = () => {
   const handleDelete = async (url: string) => {
     setDeleting(url);
     try {
-      await axios.delete('http://localhost:5000/api/urls', { data: { url } });
-      const response = await axios.get('http://localhost:5000/api/urls');
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/urls`, { data: { url } });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/urls`);
       setUrls(response.data.urls);
     } catch (err: any) {
       console.error('Failed to delete URL', err);

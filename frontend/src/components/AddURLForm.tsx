@@ -7,14 +7,14 @@ const AddURLForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   const [success, setSuccess] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+  const handleSubmit = async (e: React.SubmitEvent): Promise<void> => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/urls', { url });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/urls`, { url });
       setUrl('');
       setSuccess('Endpoint added — health checks will begin shortly.');
       if (onSuccess) onSuccess();

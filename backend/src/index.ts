@@ -23,10 +23,12 @@ app.get('/health', (req, res) => {
   res.json({ status: "Server is running"})
 })
 
-wss.on('connnection', (ws) => {
+wss.on('connection', (ws) => {
   console.log("Client connected to WebSocket");
 
-  subscriber.subscribe('status-update', (message) => { ws.send(message) });
+  subscriber.subscribe('status-update', (message) => {
+    if (message != null) ws.send(String(message));
+  });
 
   ws.on('close', () => {
     console.log("Client Disconnected");
@@ -34,8 +36,7 @@ wss.on('connnection', (ws) => {
   })
 })
 
-
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
   await startHealthCheckSchedule();
   console.log(`Server is running on ${PORT}`)
 })

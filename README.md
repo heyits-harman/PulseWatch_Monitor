@@ -2,7 +2,7 @@ A real-time website and API health monitoring platform that checks the status of
 
 ## 🎯 Features
 
-- **Real-time Monitoring** - Check website/API health every 30 seconds
+- **Real-time Monitoring** - Check website/API health every 10 seconds
 - **Instant Status Updates** - WebSocket-based real-time dashboard (no polling)
 - **Response Time Tracking** - Monitor response times to identify performance issues
 - **Simple Dashboard** - Clean UI to add, remove, and monitor URLs
